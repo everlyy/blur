@@ -1,0 +1,28 @@
+#! /bin/bash
+
+function usage() {
+	echo "$(basename $0) <input_file> <blur_amount> <interpolation_fps>";
+	exit
+}
+
+input_file=$1
+blur_amount=$2
+interpolate=$3
+extension="${input_file##*.}"
+filename="${input_file%.*}"  
+output="${filename}_blurred.${extension}"
+temp="${filename}_temp.${extension}"
+
+[ -z "$input_file" ] && usage
+[ -z "$blur_amount" ] && usage
+[ -z "$interpolate" ] && usage
+
+echo "input:" $input_file
+echo "output:" $output
+echo "amount:" $blur_amount
+
+ffmpeg -loglevel error -hide_banner -stats -i $input_file  -filter:v tblend -r $interpolate $temp
+ffmpeg -loglevel error -hide_banner -stats -i $temp -vf tmix=frames=$blur_amount:weights="1" $output
+
+rm $temp
+
