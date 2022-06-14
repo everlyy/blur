@@ -12,8 +12,6 @@ output="${filename}_blurred.${extension}"
 
 [ -z "$input_file" ] && usage
 
-set -xe
-
 echo "input  :" $input_file
 echo "output :" $output
 
