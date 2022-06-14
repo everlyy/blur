@@ -12,7 +12,9 @@ output="${filename}_blurred.${extension}"
 
 [ -z "$input_file" ] && usage
 
+set -xe
+
 echo "input  :" $input_file
 echo "output :" $output
 
-ffmpeg -i $filename -filter_complex "[0:v]minterpolate=fps=120.0,tblend=all_mode=average,framestep=3[out]" -map "[out]" -map a? -c:v libx265 -x265-params "profile=monochrome12:lossless=1:preset=veryslow" $output
+ffmpeg -i "$input_file" -filter_complex "[0:v]minterpolate=fps=120.0,tblend=all_mode=average,framestep=3[out]" -map "[out]" -map a? -c:v libx265 -x265-params "profile=monochrome12:lossless=1:preset=veryslow" "$output"
