@@ -1,5 +1,6 @@
 # blur
-Motion blur and interpolation with FFMPEG
+Motion blur with FFMPEG \
+There's probably 800 better ways to do this but it works for me :-)
 
 # installation and uninstallation
 Make sure you have ffmpeg installed first. \
