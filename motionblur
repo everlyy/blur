@@ -1,18 +1,20 @@
 #! /bin/bash
 
 function usage() {
-	echo "$(basename $0) <input_file>";
+	echo "$(basename $0) <input_file> <input_file_fps>";
 	exit
 }
 
 input_file=$1
+video_fps=$2
 extension="${input_file##*.}"
 filename="${input_file%.*}"  
 output="${filename}_blurred.${extension}"
 
 [ -z "$input_file" ] && usage
+[ -z "$video_fps" ] && usage
 
-echo "input  :" $input_file
-echo "output :" $output
+echo "input: " $input
+echo "fps: " $(($video_fps*2))
 
-ffmpeg -i "$input_file" -filter_complex "[0:v]minterpolate=fps=120.0,tblend=all_mode=average,framestep=3[out]" -map "[out]" -map a? -c:v libx265 -x265-params "profile=monochrome12:lossless=1:preset=veryslow" "$output"
+ffmpeg -i "$input_file" -filter_complex "[0:v]minterpolate=fps=$(($video_fps*2)),tblend=all_mode=average,framestep=2[out]" -map "[out]" -map a? -c:v libx265 -x265-params "profile=monochrome12:lossless=1:preset=veryslow" "$output"
